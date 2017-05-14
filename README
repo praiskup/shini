@@ -1,0 +1,100 @@
+Parse INI files directly by shell
+=================================
+
+In the shini (from "shell ini") we pay attention to those aspects:
+
+1. **Portability**
+
+   The library code is expected to be written in portable shell, so you should be
+   able to parse code of this library in reasonable shell (bash, dash, ksh, and
+   many more..).
+
+2. **Performance**
+
+   Shini library is also optimized for performance, so it tries to (as long as
+   reasonably possible) stay "in-shell" and avoid fork() calls.  If your INI
+   files aren't really fancy (spaces in keywords or special characters), there
+   are no forks at all (in future, it would be allowed to add O(1) fork calls
+   for portability detection - to allow per-shell-implementation optimizations).
+
+3. **Minimal requirements**
+
+   To use this library, everything you need is your shell, and in some cases
+   'sha256sum' or 'sed' binaries (GNU sed && GNU coreutils).  Those external
+   binaries are called when section names or keywords contain special characters
+   or white-spaces respectively.  Also trailing spaces in values might lead to
+   'sed' usage.
+
+   The 'GNU sed' and 'GNU coreutils' are almost everywhere nowadays, though if
+   you can't use them -- avoid spaces and special characters in your INI files
+   and you should be fine.
+
+4. **Allow C&P re-usability (bundling)**
+
+   You should always be able to just take the `shini.sh` file, and insert it
+   into your project (shini is LGPLv2+).
+
+
+
+API
+---
+
+- `shini.sh` file to be sourced (or C&P'ed)
+- `shini_*` methods
+- `$shini_*` variables as an output from ^ methods
+- `SHINI_*` variables as configuration options
+
+There's non-small symbol pollution after sourcing the code, and parsing some
+INI file.  Those symbols should always be prefixed with `_*`, or `__*`.
+
+
+Example use-case
+----------------
+
+$ cat program.sh
+. ./shini.sh
+shini_parse your_file.ini
+shini_get -s section_name keyword
+echo "$shini_value"
+
+$ cat your_file.ini
+[section_name]
+keyword=value
+
+$ sh program.sh
+value
+
+
+Testing
+-------
+
+$ git clone --recursive https://github.com/praiskup/shini
+$ cd shini
+$ make check
+
+
+RFEs
+----
+
+- Read-write access.  So far shini supports read only access to ini files.
+
+- Escaping.  Statements like `var="value"` stay "as-is", so including double
+  quotes.
+
+
+
+Alternatives
+------------
+
+crudini - powerful command line reader/editor of INI files, written in Python
+    (much more features, though goes against our aspects 1.-4.).  Link:
+    https://github.com/pixelb/crudini
+
+bash_ini_parser - Similar functionality to shini, Bash only though. Link:
+    https://github.com/rudimeier/bash_ini_parser
+
+bash-ini-parser - Similar functionality, different API, Bash only, a bit more
+    features (quoting).  link: https://github.com/albfan/bash-ini-parser
+
+
+Let me know if you know about something worth mentioning here.  Thanks!

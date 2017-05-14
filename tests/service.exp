@@ -1,0 +1,4 @@
+network.target
+PostgreSQL database server
+-1000
+PGDATA=/var/lib/pgsql/data
