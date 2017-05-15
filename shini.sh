@@ -22,6 +22,7 @@ SHELLINI_LOADED=:
 
 : ${SHINI_KW_SUMTOOL=sha256sum}
 : ${SHINI_DEBUG=false}
+: ${SHINI_SED=sed}
 
 _si_error ()
 {
@@ -99,7 +100,7 @@ _si_trim_space ()
     case $1 in
     [\ \	]*|*[\ \	])
         # TODO: We could use ${VAR##} and ${VAR%%} when available.
-        _trim_val=`echo "$1" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'`
+        _trim_val=`echo "$1" | "$SHINI_SED" -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'`
         ;;
     esac
 }

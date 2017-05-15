@@ -6,8 +6,8 @@ In the shini (from "shell ini") we pay attention to those aspects:
 1. **Portability**
 
    The library code is expected to be written in portable shell, so you should be
-   able to parse code of this library in reasonable shell (bash, dash, ksh, and
-   many more..).
+   able to parse code of this library in reasonable implementation (bash, dash,
+   ksh, and many more..).
 
 2. **Performance**
 
@@ -22,17 +22,18 @@ In the shini (from "shell ini") we pay attention to those aspects:
    To use this library, everything you need is your shell, and in some cases
    'sha256sum' or 'sed' binaries (GNU sed && GNU coreutils).  Those external
    binaries are called when section names or keywords contain special characters
-   or white-spaces respectively.  Also trailing spaces in values might lead to
-   'sed' usage.
+   or white-spaces respectively.  Leading/trailing spaces in statements' values
+   might lead to 'sed' usage.
 
    The 'GNU sed' and 'GNU coreutils' are almost everywhere nowadays, though if
    you can't use them -- avoid spaces and special characters in your INI files
-   and you should be fine.
+   and you should be fine.  Use $SHINI_KW_SUMTOOL and $SHINI_SED variables to
+   respecify 'sha256sum' and 'sed' location.
 
 4. **Allow C&P re-usability (bundling)**
 
-   You should always be able to just take the `shini.sh` file, and insert it
-   into your project (shini is LGPLv2+).
+   You always should be able to just take the `shini.sh` file, and insert it
+   into any project (shini is LGPLv2+).
 
 
 
@@ -40,12 +41,13 @@ API
 ---
 
 - `shini.sh` file to be sourced (or C&P'ed)
-- `shini_*` methods
-- `$shini_*` variables as an output from ^ methods
-- `SHINI_*` variables as configuration options
+- call `shini_*` methods
+- `$shini_*` variables are set as an output from API methods
+- `SHINI_*` variables are configuration options
 
-There's non-small symbol pollution after sourcing the code, and parsing some
-INI file.  Those symbols should always be prefixed with `_*`, or `__*`.
+There's non-small symbol pollution after sourcing the code, and especially after
+parsing some INI file.  Those symbols should always be prefixed with `_*`, or
+`__*`.
 
 
 Example use-case
@@ -81,6 +83,9 @@ RFEs
 - Escaping.  Statements like `var="value"` stay "as-is", so including double
   quotes.
 
+- namespacing, each parsed ini file should go to separate namespace at least
+
+Patches are welcome!
 
 
 Alternatives
