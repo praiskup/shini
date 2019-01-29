@@ -15,4 +15,4 @@ $(BASIC_TESTS):
 
 
 clean:
-	rm tests/*.out tests/*.err
+	@rm -f tests/*.out tests/*.err
